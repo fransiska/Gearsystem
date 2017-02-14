@@ -81,7 +81,7 @@ void Processor::Reset()
     m_bInputLastCycle = false;
 }
 
-void Processor::SetIOPOrts(IOPorts* pIOPorts)
+void Processor::SetIOPorts(IOPorts* pIOPorts)
 {
     m_pIOPorts = pIOPorts;
 }
@@ -301,6 +301,65 @@ void Processor::UndocumentedOPCode()
     Log("--> ** UNDOCUMENTED OP Code (%X) at $%.4X -- %s", opcode, opcode_address, kOPCodeNames[opcode]);
 #endif
 }
+
+
+EightBitRegister* Processor::getRegister(Monitor::Register r){
+  switch(r){
+  case Monitor::A:
+    return AF.GetHighRegister();
+  case Monitor::F:
+    return AF.GetLowRegister();
+  case Monitor::B:
+    return BC.GetHighRegister();
+  case Monitor::C:
+    return BC.GetLowRegister();    
+  case Monitor::D:
+    return DE.GetHighRegister();
+  case Monitor::E:
+    return DE.GetLowRegister();    
+  case Monitor::H:
+    return HL.GetHighRegister();
+  case Monitor::L:
+    return HL.GetLowRegister();    
+
+  case Monitor::A2:
+    return AF2.GetHighRegister();
+  case Monitor::F2:
+    return AF2.GetLowRegister();
+  case Monitor::B2:
+    return BC2.GetHighRegister();
+  case Monitor::C2:
+    return BC2.GetLowRegister();    
+  case Monitor::D2:
+    return DE2.GetHighRegister();
+  case Monitor::E2:
+    return DE2.GetLowRegister();    
+  case Monitor::H2:
+    return HL2.GetHighRegister();
+  case Monitor::L2:
+    return HL2.GetLowRegister();
+  case Monitor::IX_H:
+    return IX.GetHighRegister();
+  case Monitor::IX_L:
+    return IX.GetLowRegister();
+  case Monitor::IY_H:
+    return IY.GetHighRegister();
+  case Monitor::IY_L:
+    return IY.GetLowRegister();
+  case Monitor::SP_H:
+    return SP.GetHighRegister();
+  case Monitor::SP_L:
+    return SP.GetLowRegister();        
+  case Monitor::PC_H:
+    return PC.GetHighRegister();
+  case Monitor::PC_L:
+    return PC.GetLowRegister();        
+  default:
+    return NULL;
+  }
+
+}
+
 
 void Processor::InitOPCodeFunctors()
 {

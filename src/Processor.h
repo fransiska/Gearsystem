@@ -26,18 +26,32 @@
 
 class IOPorts;
 
+namespace Monitor{
+  enum Register{A,F,B,C,D,E,H,L,
+                A2,F2,B2,C2,D2,E2,H2,L2,
+                IX_H,IX_L,                
+                IY_H,IY_L,
+                SP_H,SP_L,
+                PC_H,PC_L,
+                REGISTERS};
+}//ns Monitor
+
+
+
 class Processor
 {
 public:
-    Processor(Memory* pMemory);
-    ~Processor();
-    void Init();
-    void Reset();
-    unsigned int Tick();
-    void RequestINT(bool assert);
-    void RequestNMI();
-    void SetIOPOrts(IOPorts* pIOPorts);
+  Processor(Memory* pMemory);
+  ~Processor();
+  void Init();
+  void Reset();
+  unsigned int Tick();
+  void RequestINT(bool assert);
+  void RequestNMI();
+  void SetIOPorts(IOPorts* pIOPorts);
 
+    
+  EightBitRegister* getRegister(Monitor::Register r);
 private:
     typedef void (Processor::*OPCptr) (void);
     OPCptr m_OPCodes[256];
