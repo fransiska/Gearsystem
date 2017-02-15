@@ -4,6 +4,7 @@
 enum Commands{
   cmShowProcessorWindow=200,  
   cmShowExecutionWindow,
+  cmAddDisassemblyWindow,
   cmRefresh,
   cmStep,
   cmRun  

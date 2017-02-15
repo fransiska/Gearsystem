@@ -3,10 +3,10 @@
 
 
 #include "Processor.h"
-#include "SegaMemoryRule.h"
+#include "FlexMemoryRule.h"
 #include "Cartridge.h"
 #include "DummyIOPorts.h"
-
+#include "Disassembly.h"
 
 class System{
 public:
@@ -14,12 +14,10 @@ public:
   void tick();
   Cartridge cartridge; 
   Memory memory;
-  SegaMemoryRule rule;
+  FlexMemoryRule rule;
   DummyIOPorts dummyIO;
   Processor processor;
-
-
-  
+  Disassembly disassembly;  
 };
 
 

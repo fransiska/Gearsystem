@@ -5,6 +5,7 @@
 #include "Processor.h"
 #include "Placer.h"
 #include "MonitoredData.h"
+#include "TrackedObject.h"
 #define Uses_TRect
 #define Uses_TDialog
 #define Uses_TInputLine
@@ -12,7 +13,7 @@
 
 #include <tv.h>
 
-class ProcessorWindow: public TDialog,public MonitoredData{
+class ProcessorWindow: public TDialog,public MonitoredData,public Tracked<ProcessorWindow>{
 public:
   ProcessorWindow(const TRect& bounds,Processor& processor);
   //void draw();

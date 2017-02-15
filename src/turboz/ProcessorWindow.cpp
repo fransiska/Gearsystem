@@ -12,14 +12,12 @@ ProcessorWindow::Register::Register(EightBitRegister* _h,EightBitRegister* _l,TI
 
 void ProcessorWindow::Register::popData(){
   if (h){
-    uint16_t v=l->GetValue();
-    v+=static_cast<uint16_t>(h->GetValue())<<8;
+    uint16_t v=(static_cast<uint16_t>(h->GetValue())<<8)+l->GetValue();
     char buffer[5];
     sprintf(buffer,"%04X",v);
     input->setData(buffer);
   }else{
     uint8_t v=l->GetValue();
-    std::cout<<"value is "<<(int)v<<std::endl;
     char buffer[3];
     sprintf(buffer,"%02X",v);
     input->setData(buffer);
@@ -69,9 +67,9 @@ ProcessorWindow::ProcessorWindow(const TRect& bounds,Processor& _processor):
   p.newLine();
   addRegister(p,Monitor::IY_H,Monitor::IY_L,"IY");
   p.newLine();
-  addRegister(p,Monitor::IY_H,Monitor::IY_L,"SP");
+  addRegister(p,Monitor::SP_H,Monitor::SP_L,"SP");
   p.newLine();
-  addRegister(p,Monitor::IY_H,Monitor::IY_L,"PC");
+  addRegister(p,Monitor::PC_H,Monitor::PC_L,"PC");
   p.newLine();
   selectNext(false);
 }
