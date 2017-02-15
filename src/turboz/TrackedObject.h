@@ -3,6 +3,7 @@
 
 
 #include<algorithm>
+#include <vector>
 
 template<typename Object> class Tracked;
 
@@ -20,7 +21,7 @@ std::vector<Object*> ObjectTracker<Object>::objs;
 template<typename Object> class Tracked{
 public:
   Tracked(){
-    ObjectTracker<Object>::objs.insert(static_cast<Object*>(this));
+    ObjectTracker<Object>::objs.push_back(static_cast<Object*>(this));
   }
   
   ~Tracked(){
