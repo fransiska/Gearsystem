@@ -10,7 +10,9 @@
  
 #include <stdlib.h>
 #include <string.h>
+#ifndef __USE_ISOC99
 #define __USE_ISOC99
+#endif
 #include <stdio.h>
 #include <stdarg.h>
  
@@ -182,7 +184,7 @@ LIB_EXPORT int z80ex_dasm(char *output, int output_size, unsigned flags, int *t_
 	}
 	
 	if(*t_states == *t_states2) *t_states2=0;
-	
+
 	return(bytes);
 }
 

@@ -95,11 +95,7 @@ TurboZ::TurboZ(System& _system) :
   //RegisterWindow *regWin = new RegisterWindow(r);
   //newDialog();
   //deskTop->insert(new RegDlg());
-
-
-
 }
-
 
 void TurboZ::handleEvent(TEvent& event){
   TApplication::handleEvent(event); 

@@ -8,12 +8,15 @@
 #include "TrackedObject.h"
 
 
+class DisassemblyScroller;
+
 class DisassemblyWindow: public TWindow,public Tracked<DisassemblyWindow>{
 public:
   DisassemblyWindow(const TRect& bounds,Disassembly& disassembly);
+  void updatePosition(uint16_t addr);
+  Disassembly& getDisassembly(){return disassembly;}
 private:
   Disassembly& disassembly;
-  int prevy;
 };
 
 

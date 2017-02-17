@@ -12,29 +12,25 @@ public:
 
   enum State{
     Unknown,
-    //PredictedHead,
-    //PredictedTail,
+    PredictedHead,
+    PredictedTail,
     ConfirmedHead,
-    //ConfirmedTail
+    ConfirmedTail
   };    
 
   void invalidate(uint16_t addr);
   void enter(uint16_t addr);
 
-  uint16_t predictPreviousHead(uint16_t start);
-
-  uint16_t getNextConfirmedHead(uint16_t start);
-  
+    
   class Info{
   public:
-    State state;
     int t_states,t_states2;
     int length;
   };
   
-  Info disassemble(char* dis, int disMaxLength, uint8_t addr);
-  
- 
+  Info disassemble(char* dis, int disMaxLength, uint16_t addr);
+  State getState(uint16_t addr);//if unknown it computes it and returns the prediction
+  uint8_t getData(uint16_t addr);
 private:
   int getInstructionLength(uint16_t addr);
     
