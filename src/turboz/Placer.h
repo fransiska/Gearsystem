@@ -13,6 +13,7 @@ public:
   TRect place(int sizex,int sizey,bool newline=false);
   void newLine(int sizey=1);
   void space(int sizex);
+  static TRect center(const TRect& bounds,int sizex,int sizey);
 };
 
 

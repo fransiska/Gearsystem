@@ -6,7 +6,7 @@
 #include <tv.h>
 #include "Disassembly.h"
 #include "TrackedObject.h"
-
+#include "TDynamicScrollBar.h"
 
 class DisassemblyScroller;
 
@@ -15,8 +15,12 @@ public:
   DisassemblyWindow(const TRect& bounds,Disassembly& disassembly);
   void updatePosition(uint16_t addr);
   Disassembly& getDisassembly(){return disassembly;}
+  void handleEvent(TEvent& event);
+  void scrollTo(uint16_t addr);
 private:
   Disassembly& disassembly;
+  void showGoToDialog();
+  TDynamicScrollBar* vScrollBar;
 };
 
 

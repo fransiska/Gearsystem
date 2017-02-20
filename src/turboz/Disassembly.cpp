@@ -3,8 +3,10 @@
 
 #define NO_FLAGS 0
 
-Disassembly::Disassembly(Memory* _memory):
-  memory(_memory){
+Disassembly::Disassembly(Memory* _memory,Symbols* _sym):
+  memory(_memory),
+  sym(*_sym)
+{
   for (size_t i=0;i<MEMORYSIZE;i++){
     state[i]=Unknown;
   }
@@ -70,6 +72,41 @@ Disassembly::Info Disassembly::disassemble(char* dis, int disMaxLength, uint16_t
   return info;
 }
 
+
+Disassembly::Info Disassembly::disassembleWithSymbols(char* dis, int disMaxLength, uint16_t addr){
+  Disassembly::Info info;
+  info.length=z80ex_dasm(dis,disMaxLength,NO_FLAGS,&info.t_states,&info.t_states2,read_callback,addr,memory);
+
+  int len=strlen(dis);
+  if (dis[len-5]=='#'){
+    dis[len-5]=format.immediate;    
+    std::string* label=sym.getLabel(strtol(dis+len-4, NULL, 16));    
+    if (label){
+      dis[len]=' ';
+      dis=dis+len+1;
+      disMaxLength-=(len+1);
+      int toCopy=std::min(disMaxLength-1,static_cast<int>((label->length())));      
+      memcpy(dis,label->c_str(),toCopy);
+      dis[toCopy]=0;          
+    }
+    
+  }
+
+  return info;
+}
+
 uint8_t Disassembly::getData(uint16_t addr){
   return memory->Read(addr);
+}
+
+
+
+Disassembly::Format::Format():
+  immediate('$')
+{
+
+}
+
+void Disassembly::setFormat(Disassembly::Format& _format){
+  format=format;
 }

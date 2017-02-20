@@ -2,7 +2,8 @@
 #define _COMMANDS_H_
 
 enum Commands{
-  cmShowProcessorWindow=200,  
+  cmTextEdited=200,
+  cmShowProcessorWindow,  
   cmShowExecutionWindow,
   cmAddDisassemblyWindow,
   cmRefresh,

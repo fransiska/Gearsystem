@@ -18,6 +18,7 @@ public:
   DummyIOPorts dummyIO;
   Processor processor;
   Disassembly disassembly;  
+  Symbols symbols;
 };
 
 

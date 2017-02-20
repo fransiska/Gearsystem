@@ -3,9 +3,11 @@
 System::System():
   rule(&memory,&cartridge),
   processor(&memory),
-  disassembly(&memory)
+  disassembly(&memory,&symbols)
 {
-  cartridge.LoadFromFile("/home/fabio/dev/emu/mapper.sg");
+  //add exceptions when it returns false
+  cartridge.LoadFromFile("/home/fabio/dev/s/workspace/mapper/mapper.sg");
+  symbols.loadFromFile("/home/fabio/dev/s/workspace/mapper/mapper.sym");
   memory.Init();
   memory.SetCurrentRule(&rule);
   processor.SetIOPorts(&dummyIO);
