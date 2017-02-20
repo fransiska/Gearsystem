@@ -198,7 +198,7 @@ void DisassemblyWindow::scrollTo(uint16_t addr){
 
 void DisassemblyWindow::showGoToDialog(){
   
-  GoToDialog *pd = new GoToDialog(Placer::center(owner->getBounds(),23,18),
+  GoToDialog *pd = new GoToDialog(Placer::center(owner->getBounds(),24,11),
                                     disassembly.getSymbols()
                                     );
   if( pd ){
