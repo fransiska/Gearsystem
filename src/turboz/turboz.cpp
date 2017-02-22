@@ -13,11 +13,8 @@
 #define Uses_TStatusDef
 #define Uses_TStatusLine
 #define Uses_TStatusItem
-#define Uses_TPalette
-#define Uses_RProgram
 #include <tv.h>
 #include <algorithm>
-#include "turbozPalette.h"
 
 
 template<typename Window> class WindowFactory{
@@ -82,53 +79,23 @@ public:
   static TStatusLine *initStatusLine(TRect r);
   void handleEvent(TEvent& event);
   void remove(TView* view);
-  TPalette& getPalette() const;
 private:
   template<typename WindowType> void showWindow();
   template<typename WindowType> void addWindow();
   System& system;
-  TPalette palette;
 };
-/* ---------------------------------------------------------------------- */
-/*      class TProgram                                                    */
-/*                                                                        */
-/*      Palette layout                                                    */
-/*          1 = TBackground                                               */
-/*       2- 7 = TMenuView and TStatusLine                                 */
-/*       8-15 = TWindow(Blue)                                             */
-/*      16-23 = TWindow(Cyan)                                             */
-/*      24-31 = TWindow(Gray)                                             */
-/*      32-63 = TDialog                                                   */
-/* ---------------------------------------------------------------------- */
-enum TVPalette{
-  TBackground=1,
-  TMenuView_TextNormal=2,
-  TMenuView_TextDisabled=3,
-  TMenuView_TextShorcut=4,
-  TMenuView_SelectedNormal=5,
-  TMenuView_SelectedDisabled=6,
-  TMenuView_SelectedShorcut=7,
-
-};
-
 
 TurboZ::TurboZ(System& _system) :
   TProgInit( &TurboZ::initStatusLine,
              &TurboZ::initMenuBar,
              &TurboZ::initDeskTop
              ),
-  system(_system),
-  palette(TProgram::getPalette())
+  system(_system)
 {
+  //RegisterWindow *regWin = new RegisterWindow(r);
+  //newDialog();
+  //deskTop->insert(new RegDlg());
   addWindow<DisassemblyWindow>();
-  showWindow<ProcessorWindow>();
-  palette[TBackground]=palette::BLACK*palette::BACKGROUND+palette::GREEN;
-  palette[TMenuView_TextNormal]=palette::BLACK*palette::BACKGROUND+palette::CYAN;
-  palette[TMenuView_TextDisabled]=palette::BLACK*palette::BACKGROUND+palette::DARKGRAY;
-  palette[TMenuView_TextShorcut]=palette::BLACK*palette::BACKGROUND+palette::CYAN+palette::LIGHT;
-  palette[TMenuView_SelectedNormal]=palette::CYAN*palette::BACKGROUND+palette::WHITE;
-  palette[TMenuView_SelectedDisabled]=palette::CYAN*palette::BACKGROUND+palette::DARKGRAY;
-  palette[TMenuView_SelectedShorcut]=palette::CYAN*palette::BACKGROUND+palette::GRAY;
 }
 
 void TurboZ::handleEvent(TEvent& event){
@@ -147,6 +114,8 @@ void TurboZ::handleEvent(TEvent& event){
       addWindow<DisassemblyWindow>();
       clearEvent(event);
       break;
+
+
     case cmStep:
       system.processor.Tick();
       message(this,evBroadcast,cmRefresh,NULL);
@@ -203,14 +172,11 @@ TStatusLine *TurboZ::initStatusLine(TRect r)
 }
 
 
-TPalette& TurboZ::getPalette() const{
-  return const_cast<TPalette&>(palette);
-};
+
  
 
 int main()
 {
-
   System system;
   TurboZ turboz(system);
   turboz.run();
