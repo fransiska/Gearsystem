@@ -13,4 +13,6 @@ ExecutionWindow::ExecutionWindow(const TRect& bounds):
 
   insert( new TButton( p.place(8,2), "~S~tep", cmStep,bfDefault ));
   insert( new TButton( p.place(7,2), "~R~un", cmRun,bfNormal ));
+  //insert( new TButton( p.place(7,2), "S~t~op", cmStop,bfNormal ));
+  //insert( new TButton( p.place(7,2), "S~t~op", cmStop,bfNormal ));
 }

@@ -50,18 +50,33 @@ std::string* Symbols::getLabel(uint16_t addr){
 }
 
 
-/*code from http://stackoverflow.com/questions/3152241/case-insensitive-stdstring-find*/
-template <typename charT>
-struct ichar {
-    operator charT() const { return toupper(x); }
-    charT x;
-  ichar(){}
-  ichar(int t):x((charT)t){}
-};
-template <typename charT>
-static std::basic_string<ichar<charT> > *istring(std::basic_string<charT> &s) { return (std::basic_string<ichar<charT> > *)&s; }
-template <typename charT>
-static ichar<charT> *istring(const charT *s) { return (ichar<charT> *)s; }
+
+class ichar_traits:public std::char_traits<char> {
+  public:
+    static bool eq( char c1, char c2 ) { return toupper( c1 ) == toupper( c2 ); }
+    static bool ne( char c1, char c2 ) { return toupper( c1 ) != toupper( c2 ); }
+    static bool lt( char c1, char c2 ) { return toupper( c1 ) <  toupper( c2 ); }        
+    static int compare(const char_type* s1, const char_type* s2, std::size_t count ){
+      for (size_t i=0;i<count;i++){
+        if (lt(s1[i],s2[i])) return -1;
+        if (lt(s2[i],s1[i])) return +1;
+      }
+      return 0;
+    }
+  };
+
+
+
+typedef std::basic_string<char,ichar_traits> icstring;
+
+
+static icstring& istring(std::string &s) {
+  return reinterpret_cast<icstring&>(s);
+}
+static const icstring& istring(const std::string &s) {
+  return reinterpret_cast<const icstring&>(s);
+}
+
 
 
 
@@ -70,7 +85,7 @@ std::vector<std::pair<uint16_t,std::string*> > Symbols::getSubstringMatches(cons
 
   for (std::map<uint16_t,std::string>::iterator it=sym.begin();
        it!=sym.end();++it){
-    if (istring(it->second)->find(istring(s.c_str()))!=std::string::npos){
+    if (istring(it->second).find(istring(s.c_str()))!=std::string::npos){
       matches.push_back(std::make_pair(it->first,&it->second));
     }
   }
@@ -84,7 +99,7 @@ std::vector<std::pair<uint16_t,std::string*> > Symbols::getSubstringMatches(cons
 void Symbols::getSubstringMatches(const char* s,void (*cb)(const char*,void*),void* userData){
    for (std::map<uint16_t,std::string>::iterator it=sym.begin();
        it!=sym.end();++it){
-    if (istring(it->second)->find(istring(s))!=std::string::npos){
+    if (istring(it->second).find(istring(s))!=std::string::npos){
       (*cb)(it->second.c_str(),userData);
     }
    }//for
