@@ -55,6 +55,8 @@ template <typename charT>
 struct ichar {
     operator charT() const { return toupper(x); }
     charT x;
+  ichar(){}
+  ichar(int t):x((charT)t){}
 };
 template <typename charT>
 static std::basic_string<ichar<charT> > *istring(std::basic_string<charT> &s) { return (std::basic_string<ichar<charT> > *)&s; }
