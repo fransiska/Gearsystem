@@ -11,7 +11,6 @@
 class System{
 public:
   System();
-  void tick();
   Cartridge cartridge; 
   Memory memory;
   FlexMemoryRule rule;

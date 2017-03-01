@@ -333,10 +333,10 @@ void DisassemblyScroller::draw(){
     short color;
     switch(state){
     case Disassembly::PredictedHead:
-      color=palette::DARKGRAY;
+      color=palette::BLUE;
       break;
     case Disassembly::PredictedTail:
-      color=palette::BLACK;
+      color=palette::CYAN;
       break;
     case Disassembly::ConfirmedHead:
       color=palette::WHITE;
@@ -348,7 +348,7 @@ void DisassemblyScroller::draw(){
       color=palette::MAGENTA;
     }
    
-    color=color+palette::BACKGROUND*palette::BLUE;    
+    color=color+palette::BACKGROUND*(getColor(1)/palette::BACKGROUND);    
 
     cs.set(buffer,-(labelMaxLength+INFOLENGTH-labelLength) +delta.x,size.x);
 
