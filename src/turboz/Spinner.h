@@ -21,6 +21,8 @@ public:
   Spinner();
   ~Spinner();
   void setWork(Work* work,const HaltCondition* haltCondition);
+  bool isRunning();
+  bool isIdle();
 private:
   enum State{
     idle,workRequested,working,haltRequested,destroyRequested

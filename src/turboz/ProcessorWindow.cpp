@@ -2,34 +2,63 @@
 #include "commands.h"
 
 #define Uses_TEvent
+#define Used_TView
 #include <tv.h>
 #include <iostream>
+#include <sstream>
 
-ProcessorWindow::Register::Register(EightBitRegister* _h,EightBitRegister* _l,TInputLine* _input):
+class TLightInputLine:public TInputLine{
+public:
+  TLightInputLine( const TRect& bounds, int aMaxLen)
+    :TInputLine(bounds,aMaxLen){
+    std::stringstream ss;    
+    ss<<"%0"<<(aMaxLen-1)<<"X";
+    formatString=ss.str();
+  }
+
+  ~TLightInputLine(){
+
+    //std::cout<<"TLightInputLine "<<this<<" destroyed"<<std::endl;
+  }
+
+  
+  void update(uint16_t v){//assumes len(str)>=maxlen
+    sprintf(data,formatString.c_str(),v);
+    writeStr(1,0,data,1);
+
+  }
+  
+private:
+  std::string formatString;    
+};
+
+
+
+ProcessorWindow::Register::Register(EightBitRegister* _h,EightBitRegister* _l,TLightInputLine* _input):
   l(_l),h(_h),input(_input)
 {  
 }
 
-void ProcessorWindow::Register::popData(){
+void ProcessorWindow::Register::update(){
+  //std::cout<<"popping data from "<<input<<std::endl;
   if (h){
-    uint16_t v=(static_cast<uint16_t>(h->GetValue())<<8)+l->GetValue();
-    char buffer[5];
-    sprintf(buffer,"%04X",v);
-    input->setData(buffer);
+    uint16_t v=(static_cast<uint16_t>(h->GetValue())<<8)+l->GetValue();   
+    input->update(v);
+    //std::cout<<"v is"<<v<<std::endl;
   }else{
     uint8_t v=l->GetValue();
-    char buffer[3];
-    sprintf(buffer,"%02X",v);
-    input->setData(buffer);
+    input->update(v);
   }
 }
+
+
 
 void ProcessorWindow::addRegister(Placer& placer,Monitor::Register h,Monitor::Register l,const char* label){
   bool single=h==NOREGISTER;
   TRect labelbb=placer.place(single?2:3,1);
   TRect inputbb=placer.place(single?4:6,1);
 
-  TInputLine* il=new TInputLine(inputbb,single?3:5);
+  TLightInputLine* il=new TLightInputLine(inputbb,single?3:5);
   
   registers.push_back
     (
@@ -41,7 +70,7 @@ void ProcessorWindow::addRegister(Placer& placer,Monitor::Register h,Monitor::Re
      );
   insert(il);
   insert(new TLabel(labelbb,label,il));
-  registers.back().popData();
+  registers.back().update();
 }
 
 ProcessorWindow::ProcessorWindow(const TRect& bounds,Processor& _processor):
@@ -75,17 +104,29 @@ ProcessorWindow::ProcessorWindow(const TRect& bounds,Processor& _processor):
 }
 
 
-void ProcessorWindow::popData(){
-  for (std::vector<Register>::iterator   r=registers.begin();r!=registers.end();++r){
-    r->popData();
+void ProcessorWindow::handleEvent(TEvent& event){
+  if (event.what==evCommand){
+    switch(event.message.command){
+    case cmClose:
+      registers.clear();
+      break;  
+    }
+  }else if (event.what==evBroadcast&&event.message.command==cmRefreshState){
+      update();
   }
-       
+  TDialog::handleEvent(event);
+}
+
+void ProcessorWindow::update(){
+  for (auto  r=registers.begin();r!=registers.end();++r){
+    r->update();
+  }       
 }
 
 
-void ProcessorWindow::handleEvent(TEvent& event){
-  TDialog::handleEvent(event); 
-  if (event.what==evBroadcast&&event.message.command==cmRefresh){
-    popData();
-  }
+
+void ProcessorWindow::draw(){
+  //std::cout<<"proc win"<<std::endl;
+  update();
+  TDialog::draw();
 }

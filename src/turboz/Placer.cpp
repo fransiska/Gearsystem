@@ -39,8 +39,6 @@ TRect Placer::center(const TRect& bounds,int sizex,int sizey){
   r.a.y=meany-sizey/2;
   r.b.x=r.a.x+sizex;
   r.b.y=r.a.y+sizey;
-  //std::cout<<"returning"<<r.a.x<<" "<<r.a.y<<" ";;
-  //std::cout<<r.b.x<<" "<<r.b.y<<" "<<std::endl;
   return r;    
 }
 
@@ -55,9 +53,7 @@ TRect Placer::rightOf(const TRect& a,int sizex,int sizey){
   r.a.y=a.a.y;
   r.b.x=r.a.x+sizex;
   r.b.y=r.a.y+sizey;
-  std::cout<<"a is";
-  printRect(a);
-  std::cout<<"r is";
-  printRect(r);
+  //printRect(a);
+  //printRect(r);
   return r;
 }

@@ -18,6 +18,9 @@ public:
   Processor processor;
   Disassembly disassembly;  
   Symbols symbols;
+  unsigned int Tick();
+private:
+  
 };
 
 

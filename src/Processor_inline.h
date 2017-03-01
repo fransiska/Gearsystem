@@ -25,6 +25,11 @@
 #include "Processor.h"
 #include "IOPorts.h"
 
+
+inline u16 Processor::GetPC(){
+  return PC.GetValue();
+}
+
 inline u8 Processor::FetchOPCode()
 {
     u8 opcode = m_pMemory->Read(PC.GetValue());

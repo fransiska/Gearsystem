@@ -9,6 +9,14 @@ Spinner::Spinner():
 }
 
 
+bool Spinner::isRunning(){
+  return state==working;
+}
+
+bool Spinner::isIdle(){
+  return state==idle;
+}
+
 Spinner::~Spinner(){
   {
     std::lock_guard<std::mutex> lock(workm);

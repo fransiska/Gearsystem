@@ -10,16 +10,16 @@
 #include "Spinner.h"
 #include <functional>
 
+
 class ToggleButton;
 class ExecutionWindow:public TDialog,public Tracked<ExecutionWindow>{
 public:
   ExecutionWindow(const TRect& bounds,System& sys);
- void requestRun(const Spinner::HaltCondition* haltCondition);
+  void requestRun(const Spinner::HaltCondition* haltCondition);
 private:
   System& sys;
-  Spinner spinner;
   Spinner::Work fastWork,realtimeWork;
- 
+  uint32_t freq;
 };
 
 

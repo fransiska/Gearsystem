@@ -29,7 +29,13 @@ public:
 
 
 
-
+TView* getRoot(TView* v){
+  while(v->owner!=NULL){
+    std::cout<<"going to owner "<<v<<std::endl;
+    v=v->owner;
+  }
+  return v;
+}
 
 DisassemblyScroller:: DisassemblyScroller( const TRect& bounds, TScrollBar *aHScrollBar,TScrollBar *aVScrollBar ):
   TScroller( bounds, aHScrollBar, aVScrollBar )
@@ -199,7 +205,7 @@ void DisassemblyWindow::scrollTo(uint16_t addr){
 void DisassemblyWindow::showGoToDialog(){
   
   GoToDialog *pd = new GoToDialog(Placer::center(owner->getBounds(),24,11),
-                                    disassembly.getSymbols()
+                                    sys.disassembly.getSymbols()
                                     );
   if( pd ){
     ushort control=static_cast<TGroup*>(owner)->execView( pd );
@@ -227,6 +233,10 @@ void DisassemblyScroller::handleEvent(TEvent& event){
     case cmScrollBarChanged:
       static_cast<DisassemblyWindow*>(owner)-> updatePosition(vScrollBar->value);
       break;
+    case cmRefreshState:
+      std::cout<<"Disassembly window refresh"<<std::endl;
+      draw();
+      break;
     }//switch
   }//if evCommand
 
@@ -235,10 +245,10 @@ void DisassemblyScroller::handleEvent(TEvent& event){
 }
  
 
-DisassemblyWindow::DisassemblyWindow(const TRect& bounds,Disassembly& _disassembly):
+DisassemblyWindow::DisassemblyWindow(const TRect& bounds,System& _sys):
    TWindowInit( &DisassemblyWindow::initFrame ),
    TWindow( bounds,"Disasm 0000", 0),
-   disassembly(_disassembly)  
+   sys(_sys)  
 {
    
   TRect r = getExtent();
@@ -290,12 +300,7 @@ TPalette& DisassemblyScroller::getPalette() const{
 }
 
 
-TView* getRoot(TView* v){
-  while(v->owner!=NULL){
-    v=v->owner;
-  }
-  return v;
-}
+
 
 void DisassemblyScroller::draw(){ 
   static const int BUFFERSIZE=256;
@@ -331,28 +336,31 @@ void DisassemblyScroller::draw(){
       disassembly.disassembleWithSymbols(buffer+labelLength,BUFFERSIZE-labelLength,addr);
     }
     short color;
-    switch(state){
-    case Disassembly::PredictedHead:
-      color=palette::BLUE;
-      break;
-    case Disassembly::PredictedTail:
-      color=palette::CYAN;
-      break;
-    case Disassembly::ConfirmedHead:
-      color=palette::WHITE;
-      break;
-    case Disassembly::ConfirmedTail:
-      color=palette::GRAY;
-      break;
-    case Disassembly::Unknown:
-      color=palette::MAGENTA;
+    static TView* rootView=getRoot(this);
+    //std::cout<<"addr is"<<std::hex<<addr<<" and PC is"<<
+    //      static_cast<DisassemblyWindow*>(owner)->getPC()<<std::endl;
+    if (static_cast<DisassemblyWindow*>(owner)->getPC()==addr){
+      color=rootView->getColor(palette::DISASM_CURRENT_PC_LINE);
+    }else{   
+      switch(state){
+      case Disassembly::PredictedHead:
+        //std::cout<<"root view is"<<rootView<<std::endl;
+        color=rootView->getColor(palette::DISASM_PREDICTED_HEAD);
+        break;
+      case Disassembly::PredictedTail:
+        color=rootView->getColor(palette::DISASM_PREDICTED_TAIL);
+        break;
+      case Disassembly::ConfirmedHead:
+        color=rootView->getColor(palette::DISASM_CONFIRMED_HEAD);
+        break;
+      case Disassembly::ConfirmedTail:
+        color=rootView->getColor(palette::DISASM_CONFIRMED_TAIL);
+        break;
+      case Disassembly::Unknown:
+        color=rootView->getColor(palette::DEBUG);
+      }
     }
-   
-    color=color+palette::BACKGROUND*(getColor(1)/palette::BACKGROUND);    
-
-    cs.set(buffer,-(labelMaxLength+INFOLENGTH-labelLength) +delta.x,size.x);
-
-    
+    cs.set(buffer,-(labelMaxLength+INFOLENGTH-labelLength) +delta.x,size.x);    
     b.moveStr( cs.offset, cs.s, color );      
     writeLine( 0, i, size.x, 1, b);
   }
