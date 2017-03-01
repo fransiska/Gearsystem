@@ -23,6 +23,13 @@ void Placer::newLine(int sizey){
   x=identx;
 }
 
+TRect  Placer::spaceAndPlace(int dx,int dy,int sizex,int sizey,bool newline){
+  x+=dx;
+  y+=dy;
+  return place(sizex,sizey,newline);
+}
+
+
 
 TRect Placer::center(const TRect& bounds,int sizex,int sizey){
   TRect r;
@@ -32,7 +39,21 @@ TRect Placer::center(const TRect& bounds,int sizex,int sizey){
   r.a.y=meany-sizey/2;
   r.b.x=r.a.x+sizex;
   r.b.y=r.a.y+sizey;
-  //std::cout<<"returning"<<r.a.x<<" "<<r.a.y<<" ";;
-  //std::cout<<r.b.x<<" "<<r.b.y<<" "<<std::endl;
   return r;    
+}
+
+void printRect(const TRect& a){
+  std::cout<<a.a.x<<","<<a.a.y<<"~"<<a.b.x<<","<<a.b.y<<std::endl;
+}
+
+
+TRect Placer::rightOf(const TRect& a,int sizex,int sizey){
+  TRect r;
+  r.a.x=a.b.x;
+  r.a.y=a.a.y;
+  r.b.x=r.a.x+sizex;
+  r.b.y=r.a.y+sizey;
+  //printRect(a);
+  //printRect(r);
+  return r;
 }

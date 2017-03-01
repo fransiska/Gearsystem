@@ -12,24 +12,24 @@
 #define Uses_TLabel
 
 #include <tv.h>
-
-class ProcessorWindow: public TDialog,public MonitoredData,public Tracked<ProcessorWindow>{
+class TLightInputLine;
+class ProcessorWindow: public TDialog,public Tracked<ProcessorWindow>{
 public:
   ProcessorWindow(const TRect& bounds,Processor& processor);
-  //void draw();
-  void popData();
+  void draw();
   void handleEvent(TEvent& event);
 private:
+  void update();
   Processor& processor;
 
   void addRegister(Placer& p,Monitor::Register h,Monitor::Register l,const char* label);
 
-  class Register:public MonitoredData{
+  class Register{
   public:
-    Register(EightBitRegister* l,EightBitRegister*h,TInputLine* input);
+    Register(EightBitRegister* l,EightBitRegister*h,TLightInputLine* input);
     EightBitRegister* l,*h;
-    TInputLine* input;
-    void popData();
+    TLightInputLine* input;
+    void update();
   };
   std::vector<Register> registers;
   static const Monitor::Register NOREGISTER=Monitor::REGISTERS;

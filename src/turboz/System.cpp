@@ -1,3 +1,5 @@
+#include <chrono>
+
 #include "System.h"
 
 System::System():
@@ -6,8 +8,8 @@ System::System():
   disassembly(&memory,&symbols)
 {
   //add exceptions when it returns false
-  cartridge.LoadFromFile("/home/fabio/dev/s/workspace/mapper/mapper.sg");
-  symbols.loadFromFile("/home/fabio/dev/s/workspace/mapper/mapper.sym");
+  //cartridge.LoadFromFile("/home/fabio/dev/s/workspace/mapper/mapper.sg");
+  //symbols.loadFromFile("/home/fabio/dev/s/workspace/mapper/mapper.sym");
   memory.Init();
   memory.SetCurrentRule(&rule);
   processor.SetIOPorts(&dummyIO);
@@ -15,4 +17,10 @@ System::System():
   disassembly.enter(0x66);
   disassembly.enter(0x28);
 }
- 
+
+
+unsigned int System::Tick(){
+  disassembly.enter(processor.GetPC());
+  //std::cout<<"tick"<<std::endl;
+  return processor.Tick();
+}

@@ -11,7 +11,6 @@
 class System{
 public:
   System();
-  void tick();
   Cartridge cartridge; 
   Memory memory;
   FlexMemoryRule rule;
@@ -19,6 +18,9 @@ public:
   Processor processor;
   Disassembly disassembly;  
   Symbols symbols;
+  unsigned int Tick();
+private:
+  
 };
 
 

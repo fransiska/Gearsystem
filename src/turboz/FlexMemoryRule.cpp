@@ -9,7 +9,8 @@ FlexMemoryRule::FlexMemoryRule(Memory* pMemory, Cartridge* pCartridge):
 }
 
 u8 FlexMemoryRule::PerformRead(u16 address){
-  if (address<0xC000){   
+  return 0;
+  if (address<0xC000&&address<m_pCartridge->GetROMSize()){   
     return m_pCartridge->GetROM()[address];
   }else{
     return m_pMemory->Retrieve(address);

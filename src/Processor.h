@@ -52,6 +52,7 @@ public:
 
     
   EightBitRegister* getRegister(Monitor::Register r);
+  u16 GetPC();
 private:
     typedef void (Processor::*OPCptr) (void);
     OPCptr m_OPCodes[256];

@@ -6,7 +6,7 @@ enum Commands{
   cmShowProcessorWindow,  
   cmShowExecutionWindow,
   cmAddDisassemblyWindow,
-  cmRefresh,
+  cmRefreshState,
   cmStep,
   cmRun  
 };
